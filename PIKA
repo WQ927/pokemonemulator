@@ -1,0 +1,27 @@
+# Import necessary libraries
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn import metrics
+
+# Load and preprocess data
+data = pd.read_csv('spam.csv')
+emails = data['EmailText']
+labels = data['Label']
+
+# Convert the emails into a matrix of token counts
+cv = CountVectorizer()
+features = cv.fit_transform(emails)
+
+# Split the data into training and test sets
+features_train, features_test, labels_train, labels_test = train_test_split(features, labels, test_size=0.2, random_state=111)
+
+# Initialize the classifier and fit the model to the training data
+clf = MultinomialNB()
+clf.fit(features_train, labels_train)
+
+# Make predictions on the test set
+predictions = clf.predict(features_test)
+
+# Evaluate the model
+print("Accuracy:", metrics.accuracy_score(labels_test, predictions))
